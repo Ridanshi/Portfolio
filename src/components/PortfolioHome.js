@@ -22,6 +22,21 @@ export default function Homepage() {
   const [emailCopied, setEmailCopied] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(75);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+  const checkMobile = () => {
+    setIsMobile(window.innerWidth <= 768);
+  };
+
+  checkMobile();
+  window.addEventListener("resize", checkMobile);
+
+  return () => window.removeEventListener("resize", checkMobile);
+}, []);
+
+
 
   const roles = ["Modern Web Developer", "UI/UX Designer", "Frontend Expert"];
   const titles = ["A Web Developer", "An AIML Enthusiast"];
@@ -330,12 +345,20 @@ export default function Homepage() {
   animation: glow-pulse 4s ease-in-out infinite;
 }
 
+// .certification-list {
+//   display: grid;
+//   grid-template-columns: repeat(3, 360px);
+//   gap: 2rem;
+//   justify-content: center;
+// }
+
 .certification-list {
   display: grid;
-  grid-template-columns: repeat(3, 360px);
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
   justify-content: center;
 }
+
 
 .project-card {
   max-width: 350px;
@@ -349,7 +372,7 @@ export default function Homepage() {
 }
 
 #certifications .section-title {
-  margin-left: -100px;
+  margin-left: -27px;
 }
 
 
@@ -745,7 +768,6 @@ export default function Homepage() {
 
 
     @media (max-width: 768px) {
-        .nav-menu { display: none; }
         .hero-title { font-size: 2.25rem; }
         .hero-subtitle { font-size: 1rem; }
         section { padding: 4rem 0; }
@@ -835,6 +857,149 @@ export default function Homepage() {
   gap: 0.6rem;                /* icon–text spacing */
 }
 
+
+@media (max-width: 768px) {
+
+  /* ===== GLOBAL SAFETY ===== */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  .content-wrapper {
+    padding: 0 1rem;
+  }
+
+  /* ===== HEADER / NAVBAR ===== */
+  .header {
+    padding: 0.75rem 0;
+  }
+
+  .header .content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .logo {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 0.9rem !important;
+    flex-shrink: 0;
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 999;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-menu a {
+    padding: 0.5rem 0.75rem;
+    text-align: right;
+  }
+
+  /* ===== SECTIONS ===== */
+  section {
+    padding: 3.5rem 0;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  #home {
+    padding-top: 8rem;
+    padding-bottom: 4rem;
+  }
+
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  /* ===== PROJECTS ===== */
+  .project-card {
+    max-width: 100%;
+  }
+
+  .project-image {
+    height: 150px !important;
+  }
+  
+  /* Center project cards on mobile */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;     /* ⬅️ centers cards */
+    gap: 1.5rem;
+  }
+
+  .project-list .project-card {
+    width: 100%;
+    max-width: 360px;        /* same visual balance as certifications */
+  }
+
+  /* ===== CERTIFICATIONS ===== */
+  #certifications .section-title {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  /* Center certification cards on mobile */
+  .certification-list {
+    grid-template-columns: 1fr;
+    justify-items: center;   /* ⬅️ THIS is the key */
+  }
+
+  .certification-list .project-card {
+    width: 100%;
+    max-width: 360px;        /* keeps it clean, not edge-to-edge */
+  }
+
+  .cert-badges {
+    justify-content: center;
+  }
+
+  .cert-actions {
+    gap: 0.6rem;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    padding: 2rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+
+
+
     
   `;
 
@@ -878,15 +1043,70 @@ export default function Homepage() {
               e.currentTarget.style.color = 'var(--text-primary)';
             }}
           >RA</div>
-          <nav className="nav-menu" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <a href="#home" onClick={(e) => scrollToSection(e, 'home')} className="active">Home</a>
-            <a href="#about" onClick={(e) => scrollToSection(e, 'about')}>About</a>
-            <a href="#skills" onClick={(e) => scrollToSection(e, 'skills')}>Skills</a>
-            <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')}>Projects</a>
-            <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')}>Certifications</a>
-            <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>Contact</a>
+<nav className={`nav-menu ${mobileMenuOpen ? "open" : ""}`}>
+  <a
+    href="#home"
+    onClick={(e) => {
+      scrollToSection(e, "home");
+      setMobileMenuOpen(false);
+    }}
+  >
+    Home
+  </a>
 
-            <button
+  <a
+    href="#about"
+    onClick={(e) => {
+      scrollToSection(e, "about");
+      setMobileMenuOpen(false);
+    }}
+  >
+    About
+  </a>
+
+  <a
+    href="#skills"
+    onClick={(e) => {
+      scrollToSection(e, "skills");
+      setMobileMenuOpen(false);
+    }}
+  >
+    Skills
+  </a>
+
+  <a
+    href="#projects"
+    onClick={(e) => {
+      scrollToSection(e, "projects");
+      setMobileMenuOpen(false);
+    }}
+  >
+    Projects
+  </a>
+
+  <a
+    href="#certifications"
+    onClick={(e) => {
+      scrollToSection(e, "certifications");
+      setMobileMenuOpen(false);
+    }}
+  >
+    Certifications
+  </a>
+
+  <a
+    href="#contact"
+    onClick={(e) => {
+      scrollToSection(e, "contact");
+      setMobileMenuOpen(false);
+    }}
+  >
+    Contact
+  </a>
+</nav>
+
+
+          <button
               onClick={toggleTheme}
               style={{
                 background: 'none',
@@ -929,7 +1149,22 @@ export default function Homepage() {
                 </svg>
               )}
             </button>
-          </nav>
+            {isMobile && (
+    <button
+      onClick={() => setMobileMenuOpen(prev => !prev)}
+      aria-label="Open menu"
+      style={{
+        background: "none",
+        border: "none",
+        color: "var(--text-primary)",
+        cursor: "pointer",
+      }}
+    >
+      <ChevronDown size={24} />
+    </button>
+  )}
+
+            
         </div>
       </header>
 
